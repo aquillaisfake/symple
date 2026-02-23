@@ -15,6 +15,8 @@ The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. I
 - [x] Memory bank documentation
 - [x] Recipe system for common features
 - [x] Luna Menstrual Tracker app — pink soft theme, calendar with 7-day period trace, sign-in button, cycle notifications
+- [x] Calendar period days changed to dashed circle outline (numbers now visible)
+- [x] Profile page added (/profile) — name, profile picture upload, age; accessible via header icon
 
 ## Current Structure
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 
 interface PeriodEntry {
   startDate: string; // ISO date string YYYY-MM-DD
@@ -214,9 +215,13 @@ export default function MenstrualTracker() {
             <h1 className="text-2xl font-bold text-pink-700">🌸 Luna</h1>
             <p className="text-xs text-pink-400">Menstrual Tracker</p>
           </div>
-          <div className="w-10 h-10 rounded-full bg-pink-200 flex items-center justify-center text-pink-600 text-lg">
+          <Link
+            href="/profile"
+            className="w-10 h-10 rounded-full bg-pink-200 flex items-center justify-center text-pink-600 text-lg hover:bg-pink-300 transition-colors"
+            aria-label="Profil saya"
+          >
             👤
-          </div>
+          </Link>
         </div>
       </div>
 
@@ -354,8 +359,8 @@ export default function MenstrualTracker() {
                     w-9 h-9 flex items-center justify-center text-sm relative
                     ${isStart ? "day-period-start" : isPeriod ? "day-period" : ""}
                     ${isToday && !isPeriod ? "day-today text-pink-600" : ""}
+                    ${isToday && isPeriod ? "day-today" : ""}
                     ${!isPeriod && !isToday ? "text-gray-600" : ""}
-                    ${isPeriod && !isStart ? "text-white" : ""}
                   `}
                 >
                   {day}

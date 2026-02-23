@@ -31,9 +31,10 @@ body {
 
 /* Calendar day styles */
 .day-period {
-  background: linear-gradient(135deg, #f9a8d4, #f472b6);
-  color: white;
+  border: 2px dashed #f472b6;
   border-radius: 50%;
+  color: #db2777;
+  font-weight: 600;
 }
 
 .day-today {
@@ -43,10 +44,18 @@ body {
 }
 
 .day-period-start {
-  background: linear-gradient(135deg, #ec4899, #db2777);
-  color: white;
+  border: 2px dashed #db2777;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.4);
+  color: #db2777;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.25);
+}
+
+/* Today that is also a period day */
+.day-today.day-period,
+.day-today.day-period-start {
+  border: 2px solid #ec4899;
+  border-style: solid;
 }
 
 /* Notification banner */
