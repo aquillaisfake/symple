@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "SYMPLE",
+    "slug": "symple-android",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#fce7f3"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#fce7f3"
+      },
+      "package": "com.symple.menstrualtracker"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "scheme": "symple",
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Izinkan SYMPLE mengakses galeri foto untuk foto profil."
+        }
+      ]
+    ]
+  }
+}
