@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#fce7f3"
       },
-      "package": "com.symple.menstrualtracker"
+      "package": "com.symple.menstrualtracker",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

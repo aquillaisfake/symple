@@ -1,81 +1,113 @@
 # SYMPLE — Android App (Expo React Native)
 
-Aplikasi SYMPLE Menstrual Tracker untuk Android, dibangun dengan **Expo** dan **React Native**.
-
-## Cara Menjalankan di Android Emulator / HP Android
-
-### Prasyarat
-
-1. **Node.js** (v18+) — [nodejs.org](https://nodejs.org)
-2. **npm** atau **yarn** (sudah termasuk dengan Node.js)
-3. **Expo CLI** — install dengan:
-   ```bash
-   npm install -g expo-cli
-   ```
-4. **Android Studio** dengan Android Emulator yang sudah dikonfigurasi  
-   _atau_ **HP Android** dengan aplikasi **Expo Go** terinstall
+SYMPLE Menstrual Tracker for Android, built with **Expo** and **React Native**.
 
 ---
 
-### Langkah 1 — Install Dependencies
+## Building an APK
 
-Buka terminal di folder `symple-android`, lalu jalankan:
+There are two ways to build an APK: using **EAS Build** (cloud, recommended) or **locally** with Android Studio.
 
+---
+
+### Option A: EAS Build (Cloud — No Android Studio needed)
+
+This builds the APK on Expo's servers and gives you a download link.
+
+**Step 1 — Install EAS CLI**
 ```bash
+npm install -g eas-cli
+```
+
+**Step 2 — Log in to Expo**
+```bash
+eas login
+```
+(Create a free account at [expo.dev](https://expo.dev) if you don't have one)
+
+**Step 3 — Install dependencies**
+```bash
+cd symple-android
 npm install
 ```
 
----
-
-### Langkah 2 — Jalankan Aplikasi
-
-#### Opsi A: Android Emulator (Android Studio)
-
-1. Buka Android Studio → buka AVD Manager → jalankan emulator
-2. Di terminal, jalankan:
-   ```bash
-   npx expo start --android
-   ```
-   Aplikasi akan otomatis terbuka di emulator.
-
-#### Opsi B: HP Android Fisik (Expo Go)
-
-1. Install **Expo Go** dari Google Play Store di HP Android kamu
-2. Di terminal, jalankan:
-   ```bash
-   npx expo start
-   ```
-3. Scan QR code yang muncul di terminal menggunakan kamera HP atau aplikasi Expo Go
-4. Pastikan HP dan komputer terhubung ke WiFi yang sama
-
-#### Opsi C: Build APK (untuk distribusi)
-
+**Step 4 — Build the APK**
 ```bash
-npx expo build:android
-# atau dengan EAS Build (direkomendasikan):
-npm install -g eas-cli
-eas build --platform android
+npm run build:apk
+```
+or directly:
+```bash
+eas build --platform android --profile preview
 ```
 
+**Step 5 — Download the APK**
+
+When the build finishes, EAS will give you a download link. Install the `.apk` file on your Android device.
+
+> **Note:** First build may take 10–15 minutes on EAS servers.
+
 ---
 
-## Struktur Proyek
+### Option B: Local Build (Requires Android Studio + JDK)
+
+**Prerequisites:**
+- [Android Studio](https://developer.android.com/studio) installed
+- JDK 17 installed
+- Android SDK configured
+
+**Steps:**
+```bash
+cd symple-android
+npm install
+npx expo run:android
+```
+
+This will build and install the app directly on a connected device or emulator.
+
+---
+
+### Option C: Run with Expo Go (No build needed — for testing)
+
+1. Install **Expo Go** from Google Play Store on your Android phone
+2. Run:
+   ```bash
+   cd symple-android
+   npm install
+   npx expo start
+   ```
+3. Scan the QR code with your phone camera or Expo Go app
+4. Make sure your phone and computer are on the same WiFi
+
+---
+
+## Project Structure
 
 ```
 symple-android/
 ├── app/
-│   ├── _layout.tsx     # Root layout + navigasi
-│   ├── index.tsx       # Halaman utama (Menstrual Tracker)
-│   └── profile.tsx     # Halaman profil
-├── app.json            # Konfigurasi Expo
-├── package.json        # Dependencies
+│   ├── _layout.tsx     # Root layout + navigation
+│   ├── index.tsx       # Main screen (Menstrual Tracker)
+│   └── profile.tsx     # Profile screen
+├── assets/             # App icons and splash screen
+├── app.json            # Expo configuration
+├── eas.json            # EAS Build configuration (APK profiles)
+├── package.json        # Dependencies + build scripts
 └── tsconfig.json       # TypeScript config
 ```
 
-## Fitur
+## Features
 
-- 🌸 Catat hari menstruasi
-- 📅 Kalender dengan penanda periode
-- 🔔 Notifikasi pengingat siklus
-- 👤 Profil pengguna dengan foto
-- 💾 Data tersimpan di perangkat (AsyncStorage)
+- 🌸 Log menstrual days
+- 📅 Calendar with period markers
+- 🔔 Cycle reminder notifications
+- 👤 User profile with photo upload
+- 💾 Data stored on device (AsyncStorage)
+
+## Build Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run android` | Run on Android emulator/device via Expo |
+| `npm run build:apk` | Build APK via EAS (preview profile) |
+| `npm run build:apk:prod` | Build APK via EAS (production profile) |
+| `npm run build:local` | Build locally with Android Studio |
