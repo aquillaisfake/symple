@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
-const PROFILE_KEY = "luna_user_profile";
+const PROFILE_KEY = "symple_user_profile";
 
 interface UserProfile {
   name: string;
@@ -57,7 +57,7 @@ export default function ProfilePage() {
         </button>
         <div>
           <h1 className="text-xl font-bold text-pink-700">Profil Saya</h1>
-          <p className="text-xs text-pink-400">Luna Menstrual Tracker</p>
+          <p className="text-xs text-pink-400">SYMPLE Menstrual Tracker</p>
         </div>
       </div>
 

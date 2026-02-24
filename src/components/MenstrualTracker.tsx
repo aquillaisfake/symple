@@ -14,7 +14,7 @@ interface NotificationState {
   type: "reminder" | "success" | "info";
 }
 
-const STORAGE_KEY = "luna_period_entries";
+const STORAGE_KEY = "symple_period_entries";
 const CYCLE_LENGTH = 28; // average cycle days
 const PERIOD_DURATION = 7; // days period lasts
 const REMINDER_THRESHOLD = 5; // days before cycle end to remind
@@ -212,7 +212,7 @@ export default function MenstrualTracker() {
       <div className="px-5 pt-12 pb-4">
         <div className="flex items-center justify-between mb-1">
           <div>
-            <h1 className="text-2xl font-bold text-pink-700">🌸 Luna</h1>
+            <h1 className="text-2xl font-bold text-pink-700">🌸 SYMPLE</h1>
             <p className="text-xs text-pink-400">Menstrual Tracker</p>
           </div>
           <Link

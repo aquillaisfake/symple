@@ -8,7 +8,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Luna — Menstrual Tracker",
+  title: "SYMPLE — Menstrual Tracker",
   description: "Track your menstrual cycle with ease",
 };
 
