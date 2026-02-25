@@ -90,3 +90,4 @@ export async function GET() {
 |------|---------|
 | Initial | Template created with base setup |
 | 2026-02-24 | Created `symple-android/` — full Expo React Native conversion of SYMPLE app for Android emulator/device. Includes: `app/index.tsx` (MenstrualTracker), `app/profile.tsx` (ProfilePage), `app/_layout.tsx` (Expo Router), `app.json`, `package.json`, `babel.config.js`, `tsconfig.json`, `README.md`. Uses AsyncStorage instead of localStorage, expo-image-picker for avatar, react-native-safe-area-context. Zero TypeScript errors. |
+| 2026-02-25 | Ran `expo prebuild --platform android` to generate `symple-android/android/` native folder. Now includes `settings.gradle`, `build.gradle`, `MainActivity.kt`, `MainApplication.kt`, `AndroidManifest.xml`, app icons (webp), splash screens, and all Gradle wrapper files. Fixed invalid PNG assets (replaced with valid 1024×1024 pink PNGs). Committed and pushed as `4adcf013`. |
