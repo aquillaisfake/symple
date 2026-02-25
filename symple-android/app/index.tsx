@@ -6,8 +6,6 @@ import {
   ScrollView,
   StyleSheet,
   Animated,
-  Dimensions,
-  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
@@ -113,22 +111,46 @@ export default function HomeScreen() {
     return () => clearTimeout(timer);
   }, [checkNotification]);
 
-  function handleSignIn() {
-    const alreadyLogged = entries.some(
-      (e) => e.startDate === today || (today >= e.startDate && today <= e.endDate)
+  // Log period starting from a specific date (manual)
+  function logPeriodOnDate(dateStr: string) {
+    // Check if this date is already inside an existing period entry
+    const existingIdx = entries.findIndex(
+      (e) => dateStr >= e.startDate && dateStr <= e.endDate
     );
-    if (alreadyLogged) {
-      showNotification("✅ Kamu sudah mencatat menstruasi hari ini!", "info");
+
+    if (existingIdx !== -1) {
+      // Remove this entry (toggle off)
+      setEntries((prev) => prev.filter((_, i) => i !== existingIdx));
+      showNotification("🗑️ Catatan menstruasi dihapus.", "info");
       return;
     }
+
+    // Add new entry starting on this date
     const newEntry: PeriodEntry = {
-      startDate: today,
-      endDate: addDays(today, PERIOD_DURATION - 1),
+      startDate: dateStr,
+      endDate: addDays(dateStr, PERIOD_DURATION - 1),
     };
-    setEntries((prev) => [...prev, newEntry]);
-    setJustLogged(true);
-    showNotification("🌸 Berhasil dicatat! Semangat ya, jaga kesehatan selalu 💕", "success");
-    setTimeout(() => setJustLogged(false), 3000);
+
+    setEntries((prev) => {
+      const updated = [...prev, newEntry];
+      // Sort by startDate
+      updated.sort((a, b) => a.startDate.localeCompare(b.startDate));
+      return updated;
+    });
+
+    if (dateStr === today) {
+      setJustLogged(true);
+      setTimeout(() => setJustLogged(false), 3000);
+      showNotification("🌸 Berhasil dicatat! Semangat ya, jaga kesehatan selalu 💕", "success");
+    } else {
+      const d = new Date(dateStr);
+      const label = d.toLocaleDateString("id-ID", { day: "numeric", month: "long" });
+      showNotification(`🌸 Menstruasi tanggal ${label} berhasil dicatat!`, "success");
+    }
+  }
+
+  function handleSignIn() {
+    logPeriodOnDate(today);
   }
 
   function isPeriodDay(dateStr: string): boolean {
@@ -263,7 +285,7 @@ export default function HomeScreen() {
             <View>
               <Text style={styles.statusLabel}>Selamat Datang</Text>
               <Text style={styles.statusBig}>Mulai Catat Siklus</Text>
-              <Text style={styles.statusSub}>Tekan tombol di bawah untuk mulai</Text>
+              <Text style={styles.statusSub}>Ketuk tanggal di kalender untuk mulai</Text>
             </View>
           )}
         </View>
@@ -343,7 +365,13 @@ export default function HomeScreen() {
               const isEnd = isPeriodEnd(dateStr);
 
               return (
-                <View key={day} style={styles.calendarCell}>
+                <TouchableOpacity
+                  key={day}
+                  style={styles.calendarCell}
+                  onPress={() => logPeriodOnDate(dateStr)}
+                  activeOpacity={0.7}
+                  accessibilityLabel={`${isPeriod ? "Hapus" : "Catat"} menstruasi ${dateStr}`}
+                >
                   <View
                     style={[
                       styles.dayCircle,
@@ -368,7 +396,7 @@ export default function HomeScreen() {
                       <Text style={styles.dayBadgeBottom}>✨</Text>
                     )}
                   </View>
-                </View>
+                </TouchableOpacity>
               );
             })}
           </View>
@@ -388,6 +416,11 @@ export default function HomeScreen() {
               <Text style={styles.legendText}>Mulai</Text>
             </View>
           </View>
+
+          {/* Tap hint */}
+          <Text style={styles.tapHint}>
+            💡 Ketuk tanggal untuk mencatat atau menghapus menstruasi
+          </Text>
         </View>
 
         {/* History */}
@@ -396,7 +429,7 @@ export default function HomeScreen() {
           {entries.length === 0 ? (
             <View style={styles.emptyHistory}>
               <Text style={styles.emptyHistoryText}>Belum ada catatan siklus</Text>
-              <Text style={styles.emptyHistorySubText}>Tekan tombol di atas untuk mulai mencatat</Text>
+              <Text style={styles.emptyHistorySubText}>Ketuk tanggal di kalender untuk mulai mencatat</Text>
             </View>
           ) : (
             [...entries]
@@ -679,6 +712,12 @@ const styles = StyleSheet.create({
   legendText: {
     fontSize: 11,
     color: "#ec4899",
+  },
+  tapHint: {
+    textAlign: "center",
+    fontSize: 11,
+    color: "#f9a8d4",
+    marginTop: 12,
   },
   historySection: {
     marginHorizontal: 16,

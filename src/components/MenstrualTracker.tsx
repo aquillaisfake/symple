@@ -95,30 +95,60 @@ export default function MenstrualTracker() {
     return () => clearTimeout(timer);
   }, [checkNotification]);
 
-  function handleSignIn() {
-    // Check if already logged today
-    const alreadyLogged = entries.some(
-      (e) => e.startDate === today || (today >= e.startDate && today <= e.endDate)
+  // Log period starting from a specific date (manual)
+  function logPeriodOnDate(dateStr: string) {
+    // Check if this date is already inside an existing period entry
+    const existingIdx = entries.findIndex(
+      (e) => dateStr >= e.startDate && dateStr <= e.endDate
     );
 
-    if (alreadyLogged) {
-      showNotification("✅ Kamu sudah mencatat menstruasi hari ini!", "info");
+    if (existingIdx !== -1) {
+      // Remove this entry (toggle off)
+      setEntries((prev) => prev.filter((_, i) => i !== existingIdx));
+      showNotification("🗑️ Catatan menstruasi dihapus.", "info");
       return;
     }
 
+    // Check if there's already an entry starting on this exact date
+    const exactIdx = entries.findIndex((e) => e.startDate === dateStr);
+    if (exactIdx !== -1) {
+      setEntries((prev) => prev.filter((_, i) => i !== exactIdx));
+      showNotification("🗑️ Catatan menstruasi dihapus.", "info");
+      return;
+    }
+
+    // Add new entry starting on this date
     const newEntry: PeriodEntry = {
-      startDate: today,
-      endDate: addDays(today, PERIOD_DURATION - 1),
+      startDate: dateStr,
+      endDate: addDays(dateStr, PERIOD_DURATION - 1),
     };
 
-    setEntries((prev) => [...prev, newEntry]);
-    setJustLogged(true);
-    showNotification(
-      "🌸 Berhasil dicatat! Semangat ya, jaga kesehatan selalu 💕",
-      "success"
-    );
+    setEntries((prev) => {
+      const updated = [...prev, newEntry];
+      // Sort by startDate
+      updated.sort((a, b) => a.startDate.localeCompare(b.startDate));
+      return updated;
+    });
 
-    setTimeout(() => setJustLogged(false), 3000);
+    if (dateStr === today) {
+      setJustLogged(true);
+      setTimeout(() => setJustLogged(false), 3000);
+      showNotification(
+        "🌸 Berhasil dicatat! Semangat ya, jaga kesehatan selalu 💕",
+        "success"
+      );
+    } else {
+      const d = new Date(dateStr);
+      const label = d.toLocaleDateString("id-ID", { day: "numeric", month: "long" });
+      showNotification(
+        `🌸 Menstruasi tanggal ${label} berhasil dicatat!`,
+        "success"
+      );
+    }
+  }
+
+  function handleSignIn() {
+    logPeriodOnDate(today);
   }
 
   function isPeriodDay(dateStr: string): boolean {
@@ -272,7 +302,7 @@ export default function MenstrualTracker() {
             </p>
             <p className="text-xl font-bold">Mulai Catat Siklus</p>
             <p className="text-pink-100 text-sm mt-1">
-              Tekan tombol di bawah untuk mulai
+              Ketuk tanggal di kalender untuk mulai
             </p>
           </div>
         )}
@@ -354,14 +384,17 @@ export default function MenstrualTracker() {
 
             return (
               <div key={day} className="flex items-center justify-center py-0.5">
-                <div
+                <button
+                  onClick={() => logPeriodOnDate(dateStr)}
                   className={`
-                    w-9 h-9 flex items-center justify-center text-sm relative
+                    w-9 h-9 flex items-center justify-center text-sm relative cursor-pointer
+                    transition-transform active:scale-90 hover:opacity-80
                     ${isStart ? "day-period-start" : isPeriod ? "day-period" : ""}
                     ${isToday && !isPeriod ? "day-today text-pink-600" : ""}
                     ${isToday && isPeriod ? "day-today" : ""}
                     ${!isPeriod && !isToday ? "text-gray-600" : ""}
                   `}
+                  aria-label={`${isPeriod ? "Hapus" : "Catat"} menstruasi ${dateStr}`}
                 >
                   {day}
                   {isStart && (
@@ -370,7 +403,7 @@ export default function MenstrualTracker() {
                   {isEnd && (
                     <span className="absolute -bottom-1 -right-1 text-[8px]">✨</span>
                   )}
-                </div>
+                </button>
               </div>
             );
           })}
@@ -391,6 +424,11 @@ export default function MenstrualTracker() {
             <span className="text-xs text-pink-500">Mulai</span>
           </div>
         </div>
+
+        {/* Tap hint */}
+        <p className="text-center text-xs text-pink-300 mt-3">
+          💡 Ketuk tanggal untuk mencatat atau menghapus menstruasi
+        </p>
       </div>
 
       {/* History Section */}
@@ -402,7 +440,7 @@ export default function MenstrualTracker() {
           <div className="rounded-2xl bg-white/50 p-4 text-center">
             <p className="text-pink-300 text-sm">Belum ada catatan siklus</p>
             <p className="text-pink-200 text-xs mt-1">
-              Tekan tombol di atas untuk mulai mencatat
+              Ketuk tanggal di kalender untuk mulai mencatat
             </p>
           </div>
         ) : (
